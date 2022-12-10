@@ -24,6 +24,18 @@ function arraysEqual(a, b) {
   return true;
 }
 
+function create2dArray(input) {
+  // Input is array with each index being the line of the provided problem input.
+  let finalArr = [];
+
+  for (let i = 0; i < input.length; i++){
+    finalArr.push(input[i].split(''));
+  }
+
+  return finalArr;
+
+}
 
 
-export {ReadTxtToArray, arraysEqual}
+
+export {ReadTxtToArray, arraysEqual, create2dArray}

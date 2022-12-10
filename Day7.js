@@ -28,8 +28,8 @@ class Node {
 
 let root = new Node('root', 0, null);
 let total = 0;
-let map = {};
-let min = Infinity;
+let min1 = Infinity;
+let arr = [];
 
 
 DfsBuild(root, 1);
@@ -40,25 +40,26 @@ DfsTotal(root);
 
 console.log('2-- ', total);
 
-for (const [key, value] of Object.entries(map)) {
-  if (key === 'root') continue;
-  let remaining = 70000000 - root.folderSize; // 29,086,555
-  let diff = 30000000 - remaining; // 913,445
-  if (value >= diff && value < min) min = value;
+arr.sort((a, b) => a-b);
+
+for (let x = 0; x < arr.length; x++){
+  if (arr[x] > 913445) {
+    min1 = arr[x];
+    break;
+  }
 }
 
-console.log('3-- ', min);
+console.log('3.3-- ', min1);
 // 952823 to high
 
-
-
-
-
+/// HELPERS ///
 
 function DfsTotal (currNode) {
   if (currNode.folderSize <= 100000){
     total += Number(currNode.folderSize);
   }
+
+  arr.push(currNode.folderSize);
 
   for (const [key, node] of Object.entries(currNode.subfolders)) {
     DfsTotal(node);
@@ -80,12 +81,11 @@ function DfsBuild(currNode, i) {
       let folderOrSize = currOutput[0];
       let name = currOutput[1];
 
-      if (currOutput.indexOf('dir') > -1) {
+      if (input[j].indexOf('$') > -1) break;
+
+      if (currOutput.indexOf('dir') > -1 && input[j].indexOf('.') === -1) {
         currNode.addSubfolder(name, currNode);
       } else {
-        if (j > 505) {
-          // console.log('1-- ', j, currNode);
-        }
         currNode.addFile(name, folderOrSize);
       }
       i = j;
@@ -110,7 +110,6 @@ function DfsBuild(currNode, i) {
     currNode.folderSize += Number(value.fileSize);
   }
 
-  map[currNode.name] = currNode.folderSize;
   return;
 }
 

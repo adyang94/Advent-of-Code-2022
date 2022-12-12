@@ -16,37 +16,53 @@ visited.add(JSON.stringify(tailLocation));
 for (let i = 0; i < input.length; i++) {
     // iterate through the directions
     let [dir, steps] = input[i].split(' ');
-    let headLocation = arrOfKnots[0];
-    
-    
+    console.log('1--');
+
     // for loop to iterate through the steps
     for (let j = 0; j < Number(steps); j++) {
+        let headLocation = arrOfKnots[0];
         let previousKnotLastPosition = headLocation;
         let tmp;
-        
+
         // console.log('1-- ', j);
 
         // move head position
         arrOfKnots[0] = returnNewHeadPosition(dir, headLocation);
-        
+
         // iterate through all other knots
-        for (let k = 1; k < arrOfKnots.length; k++){
+        for (let k = 1; k < arrOfKnots.length; k++) {
             let currKnotPos = arrOfKnots[k];
-            let prevKnotPos = arrOfKnots[k-1];
-            
+            let prevKnotPos = arrOfKnots[k - 1];
+
             // if knot next to last knot, continue
             // console.log(i, j, checkTailNexToHead(headLocation, tailLocation));
-            if (checkTailNexToHead(prevKnotPos, currKnotPos)) {
+            if (checkKnotsAreNeighbors(prevKnotPos, currKnotPos)) {
                 continue;
+            }
+
+            for (let subarr of [[-1, 1], [1, -1], [1, 1], [-1, -1], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
+                let nextKnotPos = arrOfKnots[k + 1];
+                let [x, y] = subarr;
+                let potentialKnotPos = [Number(x) + currKnotPos[0], Number(y) + currKnotPos[1]];
+
+                if (!nextKnotPos) break;
+                console.log('2-- ', checkKnotsAreNeighbors(prevKnotPos, potentialKnotPos) && checkKnotsAreNeighbors(potentialKnotPos, nextKnotPos));
+
+                if (checkKnotsAreNeighbors(prevKnotPos, potentialKnotPos) && checkKnotsAreNeighbors(potentialKnotPos, nextKnotPos)) {
+                    previousKnotLastPosition = potentialKnotPos;
+                    break;
+                }
             }
 
             tmp = currKnotPos;
             currKnotPos = previousKnotLastPosition;
             previousKnotLastPosition = tmp;
-            
-            
+
+            arrOfKnots[k] = currKnotPos;
+
+
             // store visited positions of tail
-            if (k === 9) visited.add(arrOfKnots[9]);
+            if (k === 9) visited.add(JSON.stringify(arrOfKnots[9]));
         }
 
     }
@@ -76,25 +92,13 @@ function returnNewHeadPosition(dir, [a, b]) {
 }
 
 
-function checkTailNexToHead([a, b], [x, y]) {
+function checkKnotsAreNeighbors([a, b], [x, y]) {
     if (Math.abs(a - x) > 1 || Math.abs(b - y) > 1) {
         return false;
     }
     return true;
 }
 
-function createGrid(input) {
-    let longest = 0;
-    let arr;
+function findBestNextSpot() {
 
-    for (let i = 0; i < input.length; i++) {
-        let number = input[i].split(' ').pop();
-        longest += Number(number);
-    }
-
-    // console.log('1--', longest);
-
-    // arr = Array(2 * longest).fill(null).map(() => Array(2 * longest).fill(undefined));
-
-    return longest;
 }
